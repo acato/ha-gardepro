@@ -45,7 +45,7 @@ async def _validate_credentials(
         timeout=aiohttp.ClientTimeout(total=15),
     ) as resp:
         resp.raise_for_status()
-        data = await resp.json()
+        data = await resp.json(content_type=None)
 
     if not data.get("success"):
         code = data.get("code", "unknown")
@@ -79,7 +79,8 @@ class GardeProConfigFlow(ConfigFlow, domain=DOMAIN):
                 login_data = await _validate_credentials(session, email, password)
             except ValueError:
                 errors["base"] = "invalid_auth"
-            except (aiohttp.ClientError, TimeoutError):
+            except (aiohttp.ClientError, TimeoutError) as err:
+                _LOGGER.error("GardePro connection error: %s", err)
                 errors["base"] = "cannot_connect"
             except Exception:
                 _LOGGER.exception("Unexpected error during GardePro login")

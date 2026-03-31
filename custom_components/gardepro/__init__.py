@@ -25,7 +25,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Ensure the media directory exists
     media_root = coordinator.get_media_root()
-    await hass.async_add_executor_job(media_root.mkdir, True, True)
+    def _ensure_media_dir() -> None:
+        media_root.mkdir(parents=True, exist_ok=True)
+
+    await hass.async_add_executor_job(_ensure_media_dir)
 
     # Fetch initial data
     await coordinator.async_config_entry_first_refresh()

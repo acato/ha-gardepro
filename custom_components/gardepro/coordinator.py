@@ -117,7 +117,7 @@ class GardeProCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                         self._token_expiry = None  # force refresh
                         raise UpdateFailed("API token expired (401)")
                     resp.raise_for_status()
-                    return await resp.json()
+                    return await resp.json(content_type=None)
             else:
                 async with session.post(
                     f"{API_BASE}{path}",
@@ -129,7 +129,7 @@ class GardeProCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                         self._token_expiry = None
                         raise UpdateFailed("API token expired (401)")
                     resp.raise_for_status()
-                    return await resp.json()
+                    return await resp.json(content_type=None)
         except aiohttp.ClientError as err:
             raise UpdateFailed(f"API request failed: {err}") from err
 
@@ -159,7 +159,7 @@ class GardeProCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 timeout=timeout,
             ) as resp:
                 resp.raise_for_status()
-                data = await resp.json()
+                data = await resp.json(content_type=None)
         except (aiohttp.ClientError, TimeoutError) as err:
             raise UpdateFailed(f"GardePro login failed: {err}") from err
 

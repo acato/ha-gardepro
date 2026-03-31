@@ -12,6 +12,8 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
+from datetime import datetime, timezone
+
 from homeassistant.const import PERCENTAGE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -40,6 +42,19 @@ def _sd_percent(dev: dict[str, Any]) -> float:
     if total <= 0:
         return 0.0
     return round(used / total * 100, 1)
+
+
+def _last_activity(dev: dict[str, Any]) -> datetime | None:
+    """Parse lastModifyTime string to datetime."""
+    raw = dev.get("lastModifyTime")
+    if not raw:
+        return None
+    try:
+        # GardePro API returns "YYYY-MM-DD HH:MM:SS" in UTC
+        dt = datetime.strptime(raw, "%Y-%m-%d %H:%M:%S")
+        return dt.replace(tzinfo=timezone.utc)
+    except (ValueError, TypeError):
+        return None
 
 
 def _firmware(dev: dict[str, Any]) -> str:
@@ -123,7 +138,7 @@ SENSOR_DESCRIPTIONS: tuple[GardeProSensorEntityDescription, ...] = (
         translation_key="last_activity",
         device_class=SensorDeviceClass.TIMESTAMP,
         icon="mdi:clock-outline",
-        value_fn=lambda dev: dev.get("lastModifyTime") or None,
+        value_fn=_last_activity,
     ),
 )
 
