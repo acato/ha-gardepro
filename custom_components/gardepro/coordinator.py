@@ -21,6 +21,7 @@ from .const import (
     API_BASE,
     API_HEADERS,
     API_TOKEN_LIFETIME,
+    CAMERA_NAMES,
     DOMAIN,
     MEDIA_DIR,
     S3_KEY_PATTERN,
@@ -84,8 +85,9 @@ class GardeProCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._last_telemetry: datetime | None = None
         self._poll_count: int = 0
 
-        # Media storage path
-        self._media_root = Path(hass.config.media_dirs.get("local", "/media")) / MEDIA_DIR
+        # Media storage path — on HA OS, NFS media mounts appear directly
+        # under /media/{mount_name}, not under media_dirs["local"].
+        self._media_root = Path("/media") / MEDIA_DIR
 
     # ------------------------------------------------------------------
     # API helpers (run in executor since we use aiohttp for HTTP)
@@ -402,7 +404,17 @@ class GardeProCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     # ------------------------------------------------------------------
 
     def _get_camera_name(self, device_id: str) -> str:
-        """Get camera name from device data, falling back to device_id."""
+        """Get camera name from device data, falling back to device_id.
+
+        Resolution order:
+        1. CAMERA_NAMES override (for devices with no cloud name)
+        2. Cloud device name (sanitized)
+        3. Raw device_id as last resort
+        """
+        # Check static override first (matches sync script naming)
+        if device_id in CAMERA_NAMES:
+            return CAMERA_NAMES[device_id]
+
         devices = (self.data or {}).get("devices", {})
         dev = devices.get(device_id)
         if dev and dev.get("name"):

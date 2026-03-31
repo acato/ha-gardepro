@@ -80,19 +80,22 @@ class GardeProCamera(CoordinatorEntity[GardeProCoordinator], Camera):
         if not dev:
             return None
 
-        # Use latest_image from coordinator data
+        # Use latest_image from coordinator data (set on new downloads)
         latest = dev.get("latest_image")
         if latest:
             path = Path(latest)
-            if path.exists():
+            if path.is_file():
                 return path
 
         # Fallback: check for latest.jpg in the camera media directory
         cam_name = self.coordinator._get_camera_name(self._device_id)
         latest_path = self.coordinator.get_media_root() / cam_name / "latest.jpg"
-        if latest_path.exists():
+        if latest_path.is_file():
             return latest_path
 
+        _LOGGER.warning(
+            "No image found for %s: tried %s", self._device_id, latest_path
+        )
         return None
 
     async def async_camera_image(

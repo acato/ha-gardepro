@@ -36,7 +36,13 @@ CONF_EMAIL: Final = "email"
 CONF_PASSWORD: Final = "password"
 
 # Media storage
-MEDIA_DIR: Final = "gardepro"
+MEDIA_DIR: Final = "trailcam"
+
+# Camera name overrides: simDeviceId -> friendly directory name.
+# Used when the cloud API returns an empty device name.
+CAMERA_NAMES: Final = {
+    "9135": "driveway",
+}
 
 # S3 key regex pattern: {simDeviceId}/{YYYYMMDDHHMMSS}/thumb{N}[_extra].JPG|MP4
 S3_KEY_PATTERN: Final = r"^(\d+)/(\d{14})/thumb(\d+)(?:_\d+_-?\d+)?\.(JPG|MP4)$"
