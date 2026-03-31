@@ -1,0 +1,42 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "GardePro Account",
+        "description": "Enter your GardePro cloud account credentials.",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to GardePro cloud API.",
+      "invalid_auth": "Invalid email or password.",
+      "unknown": "An unexpected error occurred."
+    },
+    "abort": {
+      "already_configured": "This GardePro account is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery": { "name": "Battery" },
+      "sd_used": { "name": "SD used" },
+      "sd_percent": { "name": "SD usage" },
+      "signal": { "name": "Signal" },
+      "temperature": { "name": "Temperature" },
+      "photos": { "name": "Photos" },
+      "videos": { "name": "Videos" },
+      "plan_days": { "name": "Plan days left" },
+      "firmware": { "name": "Firmware" },
+      "last_activity": { "name": "Last activity" }
+    },
+    "binary_sensor": {
+      "online": { "name": "Online" }
+    },
+    "camera": {
+      "latest_capture": { "name": "Latest capture" }
+    }
+  }
+}
