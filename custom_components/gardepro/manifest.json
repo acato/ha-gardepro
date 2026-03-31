@@ -1,11 +1,11 @@
 {
   "domain": "gardepro",
   "name": "GardePro Trail Camera",
-  "codeowners": ["@acatorcini"],
+  "codeowners": ["@acato"],
   "config_flow": true,
-  "documentation": "https://github.com/acatorcini/ha-gardepro",
+  "documentation": "https://github.com/acato/ha-gardepro",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/acatorcini/ha-gardepro/issues",
+  "issue_tracker": "https://github.com/acato/ha-gardepro/issues",
   "requirements": ["boto3>=1.26.0"],
   "version": "1.0.0"
 }

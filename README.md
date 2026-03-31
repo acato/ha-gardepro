@@ -38,7 +38,7 @@ Each physical camera is registered as an HA device with these entities:
 
 1. Open HACS in Home Assistant
 2. Click the three-dot menu and select **Custom repositories**
-3. Add `https://github.com/acatorcini/ha-gardepro` with category **Integration**
+3. Add `https://github.com/acato/ha-gardepro` with category **Integration**
 4. Search for "GardePro" and install
 5. Restart Home Assistant
 6. Go to **Settings > Devices & Services > Add Integration > GardePro Trail Camera**
