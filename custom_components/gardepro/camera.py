@@ -50,6 +50,7 @@ class GardeProCamera(CoordinatorEntity[GardeProCoordinator], Camera):
         self._device_id = device_id
         self._attr_unique_id = f"{device_id}_camera"
         self._current_path: str | None = None
+        self._no_image_warned: bool = False
 
     @property
     def device_info(self) -> dict[str, Any]:
@@ -93,9 +94,12 @@ class GardeProCamera(CoordinatorEntity[GardeProCoordinator], Camera):
         if latest_path.is_file():
             return latest_path
 
-        _LOGGER.warning(
-            "No image found for %s: tried %s", self._device_id, latest_path
-        )
+        if not self._no_image_warned:
+            _LOGGER.warning(
+                "No image found for %s: tried %s (suppressing further warnings)",
+                self._device_id, latest_path,
+            )
+            self._no_image_warned = True
         return None
 
     async def async_camera_image(
